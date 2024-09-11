@@ -1,0 +1,7 @@
+1. Переходим в проводнике по адресу - %USERPROFILE%\
+2. Ищем файл .gitconfig
+3. Удаляем этот файл
+
+
+ git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"

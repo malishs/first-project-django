@@ -1,8 +1,11 @@
 from django.http import *
 from django.template.response import TemplateResponse
+from .forms import *
 
 def index(request):
-    return TemplateResponse(request, "firstapp/home.html")
+    fileselected = FileSelected()
+    return TemplateResponse(request, "firstapp/index.html", 
+                                {"form": fileselected})
 
 def personal(request):
     header = "Персональные данные"
@@ -31,3 +34,18 @@ def users(request):
     name = request.GET.get("name", "Максим")
     output = "<h2>Пользователь</h2><h3>id: {0} Имя: {1} </h3>".format(id,name)
     return HttpResponse(output)
+
+def chaihana(request):
+    cat = ["Ноутбуки", "Принтеры", "Сканеры", "Диски", "Шнуры"]
+    return TemplateResponse(request, "firstapp/chaihana.html", context={"cat": cat})
+
+def nameage(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        age = request.POST.get("age")
+        output = "<h2>Пользователь</h2><h3>Имя - {0}, Возраст - {1}</h3>".format(name, age)
+        return HttpResponse(output)
+    else:
+        nameage = Nameage()
+        return TemplateResponse(request, "firstapp/index.html", 
+                                {"form": nameage})

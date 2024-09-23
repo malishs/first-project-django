@@ -1,11 +1,19 @@
 from django.http import *
 from django.template.response import TemplateResponse
 from .forms import *
+from .models import Person
 
 def index(request):
-    fileselected = FileSelected()
-    return TemplateResponse(request, "firstapp/index.html", 
-                                {"form": fileselected})
+    people = Person.objects.all()
+    return TemplateResponse(request, "index.html", {"people": people})
+
+def create(request):
+    if request.method == "POST":
+        klient = Person()
+        klient.name = request.POST.get("name")
+        klient.age = request.POST.get("age")
+        klient.save()
+    return HttpResponseRedirect("/")
 
 def personal(request):
     header = "Персональные данные"
@@ -49,3 +57,7 @@ def nameage(request):
         nameage = Nameage()
         return TemplateResponse(request, "firstapp/index.html", 
                                 {"form": nameage})
+def forma(request):
+    userForm = UserForm()
+    return TemplateResponse(request, "firstapp/formakak.html", 
+                                {"form": Forma})

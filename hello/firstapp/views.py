@@ -1,7 +1,19 @@
 from django.http import *
 from django.template.response import TemplateResponse
-from .forms import *
+from .forms import UserForm
 from .models import Person
+from .models import Company, Product
+from .models import Student, Cours
+from .models import User, Account
+from django.db.models import F 
+
+alex = User.objects.create(name="Александр")
+acc = Account(login = "1234", password="6565")
+alex.account = acc
+alex.account.save()
+alex.account.login = "qwerty"
+alex.account.password = "123456"
+alex.account.save()
 
 def index(request):
     people = Person.objects.all()
@@ -14,6 +26,27 @@ def create(request):
         klient.age = request.POST.get("age")
         klient.save()
     return HttpResponseRedirect("/")
+
+def edit(request, id):
+    try:
+        person = Person.objects.get(id=id)
+        if request.method == "POST":
+            person.name = request.POST.get("name")
+            person.age = request.POST.get("age")
+            person.save()
+            return HttpReponseRedirect("/")
+        else:
+            return TemplateResponse(request, "edit.html", {"person": person})
+    except Person.DoesNotExists:
+        return HttpReponseNotFound("<h2>Клиент не найден</h2>")
+
+def delete(request, id):
+    try:
+        person = Person.objects.get(id=id)
+        person.delete()
+        return HttpRepsonseRedirect("/")
+    except Person.DoesNotExists:
+        return HttpResponseRedirect("/about")
 
 def personal(request):
     header = "Персональные данные"
